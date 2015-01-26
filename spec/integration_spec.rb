@@ -1,6 +1,6 @@
 describe "integration" do
-  let(:build_dir) { File.join(Dir.pwd, 'spec', 'site') }
-  let(:json_path) { File.join(build_dir, '_site', 'api', 'v1', 'pages.json') }
+  BUILD_DIR = File.join(Dir.pwd, 'spec', 'site')
+  JSON_PATH = File.join(BUILD_DIR, '_site', 'api', 'v1', 'pages.json')
 
   def read_json(path)
     contents = File.read(path)
@@ -8,7 +8,7 @@ describe "integration" do
   end
 
   def entries_data
-    json = read_json(json_path)
+    json = read_json(JSON_PATH)
     json['entries']
   end
 
@@ -16,10 +16,10 @@ describe "integration" do
     entries_data.find{|page| page['url'] == '/' }
   end
 
-  before do
+  before(:context) do
     # http://bundler.io/man/bundle-exec.1.html#Shelling-out
     Bundler.with_clean_env do
-      Dir.chdir(build_dir) do
+      Dir.chdir(BUILD_DIR) do
         `bundle`
         `bundle exec jekyll build`
       end
@@ -27,7 +27,7 @@ describe "integration" do
   end
 
   it "generates the JSON file" do
-    expect(File.exist?(json_path)).to be_truthy
+    expect(File.exist?(JSON_PATH)).to be_truthy
   end
 
   it "includes an entry for every page" do
