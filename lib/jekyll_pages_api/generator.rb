@@ -1,3 +1,4 @@
+require 'htmlentities'
 require 'liquid'
 require_relative 'filters'
 require_relative 'page_without_a_file'
@@ -10,25 +11,39 @@ module JekyllPagesApi
       include JekyllPagesApi::Filters
     end
 
-    attr_reader :filterer, :site
+    attr_reader :site
 
     def initialize(site)
-      @filterer = Filterer.new
       @site = site
+    end
+
+    def filterer
+      @filterer ||= Filterer.new
+    end
+
+    def html_decoder
+      @html_decoder = HTMLEntities.new
     end
 
     def pages
       self.site.pages.select {|page| %w(.html .md).include?(page.ext) }
     end
 
+    def decode_html(str)
+      self.html_decoder.decode(str)
+    end
+
     def get_output(page)
-      filterer.condense(filterer.strip_html(page.content))
+      result = filterer.strip_html(page.content)
+      result = filterer.condense(result)
+      decode_html(result)
     end
 
     def pages_data
       self.pages.map do |page|
+        title = page.data['title'] || ''
         {
-          title: page.data['title'],
+          title: decode_html(title),
           url: page.url,
           body: self.get_output(page)
         }
