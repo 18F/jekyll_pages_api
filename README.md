@@ -1,4 +1,4 @@
-# JekyllPagesApi
+# JekyllPagesApi [![Build Status](https://travis-ci.org/18F/jekyll_pages_api.svg?branch=master)](https://travis-ci.org/18F/jekyll_pages_api)
 
 TODO: Write a gem description
 
