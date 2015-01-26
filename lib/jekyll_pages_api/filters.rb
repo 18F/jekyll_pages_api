@@ -18,10 +18,14 @@ module JekyllPagesApi
     end
 
     def text_only(str)
-      [:strip_html, :condense, :decode_html].each do |filter|
-        str = self.send(filter, str)
+      # apply each filter in order
+      [
+        :strip_html,
+        :condense,
+        :decode_html
+      ].reduce(str) do |result, filter|
+        self.send(filter, result)
       end
-      str
     end
 
 
