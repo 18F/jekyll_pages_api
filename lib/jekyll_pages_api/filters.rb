@@ -17,6 +17,13 @@ module JekyllPagesApi
       str.to_s.gsub(/\s+/m, ' '.freeze).strip
     end
 
+    def text_only(str)
+      [:strip_html, :condense, :decode_html].each do |filter|
+        str = self.send(filter, str)
+      end
+      str
+    end
+
 
     private
 

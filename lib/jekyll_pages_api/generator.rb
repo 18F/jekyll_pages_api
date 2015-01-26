@@ -18,9 +18,7 @@ module JekyllPagesApi
     end
 
     def get_output(page)
-      result = self.filterer.strip_html(page.content)
-      result = self.filterer.condense(result)
-      filterer.decode_html(result)
+      self.filterer.text_only(page.content)
     end
 
     def pages_data
