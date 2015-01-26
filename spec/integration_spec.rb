@@ -44,4 +44,10 @@ describe "integration" do
       expect(page['body']).to_not include('{{')
     end
   end
+
+  it "condenses the content" do
+    entries_data.each do |page|
+      expect(page['body']).to_not match(/\s{2,}/m)
+    end
+  end
 end
