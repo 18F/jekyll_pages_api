@@ -9,6 +9,14 @@ module JekyllPagesApi
     class Filterer
       include Liquid::StandardFilters
       include JekyllPagesApi::Filters
+
+      def html_decoder
+        @html_decoder = HTMLEntities.new
+      end
+
+      def decode_html(str)
+        self.html_decoder.decode(str)
+      end
     end
 
     attr_reader :site
@@ -21,29 +29,21 @@ module JekyllPagesApi
       @filterer ||= Filterer.new
     end
 
-    def html_decoder
-      @html_decoder = HTMLEntities.new
-    end
-
     def pages
       self.site.pages.select {|page| %w(.html .md).include?(page.ext) }
     end
 
-    def decode_html(str)
-      self.html_decoder.decode(str)
-    end
-
     def get_output(page)
-      result = filterer.strip_html(page.content)
-      result = filterer.condense(result)
-      decode_html(result)
+      result = self.filterer.strip_html(page.content)
+      result = self.filterer.condense(result)
+      filterer.decode_html(result)
     end
 
     def pages_data
       self.pages.map do |page|
         title = page.data['title'] || ''
         {
-          title: decode_html(title),
+          title: self.filterer.decode_html(title),
           url: page.url,
           body: self.get_output(page)
         }
