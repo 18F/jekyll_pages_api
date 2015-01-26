@@ -1,24 +1,8 @@
-require 'htmlentities'
-require 'liquid'
-require_relative 'filters'
+require_relative 'filterer'
 require_relative 'page_without_a_file'
 
 module JekyllPagesApi
   class Generator
-    # This is a hack to allow the module functions to be used
-    class Filterer
-      include Liquid::StandardFilters
-      include JekyllPagesApi::Filters
-
-      def html_decoder
-        @html_decoder = HTMLEntities.new
-      end
-
-      def decode_html(str)
-        self.html_decoder.decode(str)
-      end
-    end
-
     attr_reader :site
 
     def initialize(site)
