@@ -3,7 +3,7 @@ require 'liquid'
 
 module JekyllPagesApi
   # This is a hack to allow the module functions to be used
-  class Filterer
+  class Filters
     include Liquid::StandardFilters
 
     def decode_html(str)

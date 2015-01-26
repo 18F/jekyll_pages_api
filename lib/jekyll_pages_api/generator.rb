@@ -1,4 +1,4 @@
-require_relative 'filterer'
+require_relative 'filters'
 require_relative 'page_without_a_file'
 
 module JekyllPagesApi
@@ -10,7 +10,7 @@ module JekyllPagesApi
     end
 
     def filterer
-      @filterer ||= Filterer.new
+      @filterer ||= Filters.new
     end
 
     def pages
