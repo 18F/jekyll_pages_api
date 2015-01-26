@@ -1,4 +1,4 @@
-require_relative 'filters'
+require_relative 'page'
 require_relative 'page_without_a_file'
 
 module JekyllPagesApi
@@ -9,27 +9,12 @@ module JekyllPagesApi
       @site = site
     end
 
-    def filterer
-      @filterer ||= Filters.new
-    end
-
     def pages
-      self.site.pages.select {|page| %w(.html .md).include?(page.ext) }
-    end
-
-    def get_output(page)
-      self.filterer.text_only(page.content)
+      self.site.pages.map{|page| Page.new(page) }.select(&:html?)
     end
 
     def pages_data
-      self.pages.map do |page|
-        title = page.data['title'] || ''
-        {
-          title: self.filterer.decode_html(title),
-          url: page.url,
-          body: self.get_output(page)
-        }
-      end
+      self.pages.map(&:to_json)
     end
 
     def data
