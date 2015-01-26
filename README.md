@@ -1,31 +1,37 @@
-# JekyllPagesApi [![Build Status](https://travis-ci.org/18F/jekyll_pages_api.svg?branch=master)](https://travis-ci.org/18F/jekyll_pages_api)
+# Jekyll Pages API [![Build Status](https://travis-ci.org/18F/jekyll_pages_api.svg?branch=master)](https://travis-ci.org/18F/jekyll_pages_api)
 
-TODO: Write a gem description
+Jekyll Pages API is a [Jekyll](http://jekyllrb.com) [Plugin](http://jekyllrb.com/docs/plugins/) that generates a JSON file with data for all the pages in your Site.
 
-## Installation
+## Usage
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'jekyll_pages_api'
+group :jekyll_plugins do
+  gem 'jekyll_pages_api'
+end
 ```
 
 And then execute:
 
-    $ bundle
+```bash
+bundle
+bundle exec jekyll serve
+```
 
-Or install it yourself as:
+You can then see the generated JSON file at http://localhost:4000/api/v1/pages.json, which will look something like this:
 
-    $ gem install jekyll_pages_api
+```json
+{
+  "entries": [
+    {
+      "title": "18F Hub",
+      "url": "/",
+      "body": "18F is a digital services team within GSA..."
+    },
+    ...
+  ]
+}
+```
 
-## Usage
-
-TODO: Write usage instructions here
-
-## Contributing
-
-1. Fork it ( https://github.com/[my-github-username]/jekyll_pages_api/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+This endpoint will be re-generated any time your site it rebuilt.
