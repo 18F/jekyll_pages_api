@@ -7,7 +7,7 @@ module JekyllPagesApi
     include Liquid::StandardFilters
 
     def decode_html(str)
-      self.html_decoder.decode(str)
+      html_decoder.decode(str)
     end
 
     # Slight tweak of
