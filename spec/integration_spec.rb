@@ -1,3 +1,5 @@
+require 'json'
+
 describe "integration" do
   BUILD_DIR = File.join(Dir.pwd, 'spec', 'site')
   JSON_PATH = File.join(BUILD_DIR, '_site', 'api', 'v1', 'pages.json')

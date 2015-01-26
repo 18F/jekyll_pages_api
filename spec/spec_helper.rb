@@ -15,7 +15,7 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-require 'json'
+require_relative '../lib/jekyll_pages_api'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
