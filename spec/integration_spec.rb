@@ -47,6 +47,12 @@ describe "integration" do
     end
   end
 
+  it "removes HTML tags" do
+    entries_data.each do |page|
+      expect(page['body']).to_not include('<')
+    end
+  end
+
   it "condenses the content" do
     entries_data.each do |page|
       expect(page['body']).to_not match(/\s{2,}/m)
