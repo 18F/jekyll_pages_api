@@ -1,6 +1,6 @@
 # Jekyll Pages API [![Build Status](https://travis-ci.org/18F/jekyll_pages_api.svg?branch=master)](https://travis-ci.org/18F/jekyll_pages_api)
 
-Jekyll Pages API is a [Jekyll](http://jekyllrb.com) [Plugin](http://jekyllrb.com/docs/plugins/) that generates a JSON file with data for all the pages in your Site.
+Jekyll Pages API is a [Jekyll](http://jekyllrb.com) [Plugin](http://jekyllrb.com/docs/plugins/) that generates a JSON file with data for all the Pages in your Site.
 
 ## Usage
 
