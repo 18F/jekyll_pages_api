@@ -30,6 +30,14 @@ describe "integration" do
     expect(File.exist?(json_path)).to be_truthy
   end
 
+  it "includes an entry for every page" do
+    urls = entries_data.map{|page| page['url'] }
+    expect(urls).to eq(%w(
+      /about/
+      /index.html
+    ))
+  end
+
   it "removes liquid tags" do
     entries_data.each do |page|
       expect(page['body']).to_not include('{%')
