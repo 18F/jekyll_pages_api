@@ -8,10 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = JekyllPagesApi::VERSION
   spec.authors       = ["Aidan Feldman"]
   spec.email         = ["aidan.feldman@gsa.gov"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
-  spec.license       = "MIT"
+  spec.summary       = %q{A Jekyll Plugin that generates a JSON file with data for all the Pages in your Site.}
+  spec.homepage      = "https://github.com/18F/jekyll_pages_api"
+  spec.license       = "CC0-1.0"
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
