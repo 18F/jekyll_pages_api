@@ -8,7 +8,7 @@ Add this line to your application's Gemfile:
 
 ```ruby
 group :jekyll_plugins do
-  gem 'jekyll_pages_api', git: 'https://github.com/18F/jekyll_pages_api.git'
+  gem 'jekyll_pages_api'
 end
 ```
 
