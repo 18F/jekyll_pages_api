@@ -34,4 +34,4 @@ You can then see the generated JSON file at http://localhost:4000/api/v1/pages.j
 }
 ```
 
-This endpoint will be re-generated any time your site it rebuilt.
+This endpoint will be re-generated any time your site is rebuilt.
