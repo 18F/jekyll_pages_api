@@ -19,17 +19,19 @@ bundle
 bundle exec jekyll serve
 ```
 
-You can then see the generated JSON file at http://localhost:4000/api/v1/pages.json, which will look something like this:
+You can then see the generated JSON file at http://localhost:4000/api/v1/pages.json, which will look like this:
 
-```json
+```javascript
 {
   "entries": [
     {
       "title": "18F Hub",
+      // the page path
       "url": "/",
+      // the content of the page, with the HTML tags stripped and the whitespace condensed
       "body": "18F is a digital services team within GSA..."
     },
-    ...
+    // ...
   ]
 }
 ```
