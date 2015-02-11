@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'json'
 require_relative 'support/shell'
 
@@ -15,8 +17,12 @@ describe "integration" do
     json['entries']
   end
 
+  def page_data(url)
+    entries_data.find{|page| page['url'] == url }
+  end
+
   def homepage_data
-    entries_data.find{|page| page['url'] == '/' }
+    page_data('/')
   end
 
   before(:context) do
@@ -38,6 +44,7 @@ describe "integration" do
     expect(urls).to eq(%w(
       /about/
       /index.html
+      /unicode.html
     ))
   end
 
@@ -58,5 +65,10 @@ describe "integration" do
     entries_data.each do |page|
       expect(page['body']).to_not match(/\s{2,}/m)
     end
+  end
+
+  it "handles unicode" do
+    page = page_data('/unicode.html')
+    expect(page['body']).to eq("”Handle the curly quotes!” they said.")
   end
 end
