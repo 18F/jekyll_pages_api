@@ -11,6 +11,12 @@ bundle
 bundle exec rspec
 ```
 
+### Running against Jekyll 3
+
+```bash
+BUNDLE_GEMFILE=gemfiles/jekyll_3.gemfile bundle exec rspec
+```
+
 ## Public domain
 
 This project is in the public domain within the United States, and
