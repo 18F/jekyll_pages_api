@@ -29,8 +29,8 @@ describe "integration" do
     # http://bundler.io/man/bundle-exec.1.html#Shelling-out
     Bundler.with_clean_env do
       Dir.chdir(BUILD_DIR) do
-        run_cmd('bundle')
-        run_cmd('bundle exec jekyll build')
+        run_cmd("JEKYLL_VERSION=#{Jekyll::VERSION} bundle update")
+        run_cmd("JEKYLL_VERSION=#{Jekyll::VERSION} bundle exec jekyll build")
       end
     end
   end
