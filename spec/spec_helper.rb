@@ -17,6 +17,8 @@
 
 require_relative '../lib/jekyll_pages_api'
 
+puts "Using Jekyll v#{Jekyll::VERSION}"
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
