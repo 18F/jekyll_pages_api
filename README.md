@@ -1,4 +1,4 @@
-# Jekyll Pages API [![Build Status](https://travis-ci.org/18F/jekyll_pages_api.svg?branch=master)](https://travis-ci.org/18F/jekyll_pages_api)
+# Jekyll Pages API [![Build Status](https://travis-ci.org/18F/jekyll_pages_api.svg?branch=master)](https://travis-ci.org/18F/jekyll_pages_api) [![Code Climate](https://codeclimate.com/github/18F/jekyll_pages_api/badges/gpa.svg)](https://codeclimate.com/github/18F/jekyll_pages_api)
 
 Jekyll Pages API is a [Jekyll Plugin](http://jekyllrb.com/docs/plugins/) gem that generates a JSON file with data for all the Pages in your Site. [Jekyll](http://jekyllrb.com), if you're not familiar, is a static website generator written in Ruby.
 
