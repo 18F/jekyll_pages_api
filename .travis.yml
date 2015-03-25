@@ -5,3 +5,5 @@ gemfile:
 - gemfiles/jekyll_2.gemfile
 - gemfiles/jekyll_3.gemfile
 script: bundle exec rspec
+notifications:
+  webhooks: http://project-monitor.cf.18f.us/projects/jekyll-pages-api/status
