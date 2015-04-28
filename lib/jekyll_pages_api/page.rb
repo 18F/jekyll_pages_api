@@ -33,10 +33,15 @@ module JekyllPagesApi
       self.filterer.text_only(self.page.content)
     end
 
+    def tags
+      self.page.data['tags'] || []
+    end
+
     def to_json
       {
         title: self.title,
         url: self.url,
+        tags: self.tags,
         body: self.body_text
       }
     end
