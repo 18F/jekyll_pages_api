@@ -81,4 +81,9 @@ describe "integration" do
     page = page_data('/unicode.html')
     expect(page['body']).to eq("”Handle the curly quotes!” they said.")
   end
+
+  it "includes front matter tags" do
+    page = page_data('/about/')
+    expect(page['tags']).to eq(["Jekyll", "test page", "convenient"])
+  end
 end
