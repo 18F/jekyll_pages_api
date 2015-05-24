@@ -10,7 +10,12 @@ module JekyllPagesApi
     end
 
     def pages
-      self.site.pages.map{|page| Page.new(page) }.select(&:html?)
+      result = Array.new
+      self.site.each_site_file do |p|
+        p = Page.new(p, @site)
+        result << p if p.html?
+      end
+      result
     end
 
     def pages_data
