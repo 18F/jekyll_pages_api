@@ -1,3 +1,5 @@
+require 'tmpdir'
+
 BASEURL = Jekyll::Configuration::DEFAULTS['baseurl']
 
 RSpec.shared_context "create page" do
