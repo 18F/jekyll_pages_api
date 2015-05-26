@@ -40,6 +40,25 @@ You can then see the generated JSON file at http://localhost:4000/api/v1/pages.j
 
 This endpoint will be re-generated any time your site is rebuilt.
 
+## Developing
+
+* Run `bundle` to install any necessary gems.
+* Run `bundle exec rake -T` to get a list of build commands and descriptions.
+* Run `bundle exec rake spec` to run the tests.
+* Run `bundle exec rake build` to ensure the entire gem can build.
+* Commit an update to bump the version number of
+  `lib/jekyll_pages_api/version.rb` before running `bundle exec rake release`.
+
+While developing this gem, add this to the Gemfile of any project using the
+gem to try out your changes (presuming the project's working directory is a
+sibling of the gem's working directory):
+
+```ruby
+group :jekyll_plugins do
+  gem 'jekyll_pages_api', :path => '../jekyll_pages_api'
+end
+```
+
 ## See also
 
 Additional means of turning your site content into data:
