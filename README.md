@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/18F/jekyll_pages_api](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/18F/jekyll_pages_api?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Jekyll Pages API is a [Jekyll Plugin](http://jekyllrb.com/docs/plugins/) gem that generates a JSON file with data for all the Pages in your Site. [Jekyll](http://jekyllrb.com), if you're not familiar, is a static website generator written in Ruby.
+Jekyll Pages API is a [Jekyll Plugin](http://jekyllrb.com/docs/plugins/) gem that generates a JSON file with data for all the Pages, Posts, Documents (i.e. "collections") and StaticFiles in your Site. [Jekyll](http://jekyllrb.com), if you're not familiar, is a static website generator written in Ruby.
 
 ## Usage
 

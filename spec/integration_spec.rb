@@ -12,8 +12,12 @@ describe "integration" do
     JSON.parse(contents)
   end
 
+  def pages_data
+    @json ||= read_json(JSON_PATH)
+  end
+
   def entries_data
-    (@json ||= read_json(JSON_PATH))['entries']
+    pages_data['entries']
   end
 
   def page_data(url)

@@ -12,10 +12,10 @@ module JekyllPagesApi
     end
 
     def pages
-      result = Array.new
-      self.site.each_site_file do |p|
-        p = Page.new(p, @site)
-        result << p if p.html?
+      result = []
+      self.site.each_site_file do |site_file|
+        page = Page.new(site_file, @site)
+        result << page if page.html?
       end
       result
     end
