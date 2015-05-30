@@ -4,8 +4,10 @@ module JekyllPagesApi
   # wrapper for a Jekyll::Page
   class Page
     HTML_EXTS = %w(.html .md .markdown .textile).to_set
-    attr_reader :page
+    attr_reader :page, :site
 
+    # Jekyll::StaticFile doesn't expose a `site` accessor, so we require an
+    # explicit `site` argument here.
     def initialize(page, site)
       @page = page
       @site = site
@@ -27,7 +29,7 @@ module JekyllPagesApi
     end
 
     def base_url
-      @site.baseurl
+      self.site.baseurl
     end
 
     def rel_path
