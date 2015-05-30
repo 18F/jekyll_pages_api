@@ -3,14 +3,17 @@ require_relative 'filters'
 module JekyllPagesApi
   # wrapper for a Jekyll::Page
   class Page
+    HTML_EXTS = %w(.html .md .markdown .textile).to_set
     attr_reader :page
 
-    def initialize(page)
+    def initialize(page, site)
       @page = page
+      @site = site
     end
 
     def html?
-      %w(.html .md).include?(self.page.ext)
+      path = self.page.path
+      path.end_with?('/') || HTML_EXTS.include?(File.extname(path))
     end
 
     def filterer
@@ -18,23 +21,33 @@ module JekyllPagesApi
     end
 
     def title
-      self.filterer.decode_html(self.page.data['title'] || '')
+      title = self.page.data['title'] if self.page.respond_to?(:data)
+      title ||= self.page.title if self.page.respond_to?(:title)
+      self.filterer.decode_html(title || '')
     end
 
     def base_url
-      self.page.site.baseurl
+      @site.baseurl
+    end
+
+    def rel_path
+      path = self.page.url if self.page.respond_to?(:url)
+      path ||= self.page.relative_path if self.page.respond_to?(:relative_path)
+      path
     end
 
     def url
-      [self.base_url, self.page.url].join
+      [self.base_url, rel_path].join
     end
 
     def body_text
-      self.filterer.text_only(self.page.content)
+      output = self.page.content if self.page.respond_to?(:content)
+      output ||= File.read(self.page.path)
+      self.filterer.text_only(output)
     end
 
     def tags
-      self.page.data['tags'] || []
+      (self.page.data['tags'] if self.page.respond_to?(:data)) || []
     end
 
     def to_json

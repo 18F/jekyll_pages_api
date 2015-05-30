@@ -12,9 +12,12 @@ describe "integration" do
     JSON.parse(contents)
   end
 
+  def pages_data
+    @json ||= read_json(JSON_PATH)
+  end
+
   def entries_data
-    json = read_json(JSON_PATH)
-    json['entries']
+    pages_data['entries']
   end
 
   def page_data(url)
@@ -45,12 +48,16 @@ describe "integration" do
     # not sure why this discrepancy exists...
     if Jekyll::VERSION.start_with?('3.')
       expect(urls).to eq(%w(
+        /jekyll/update/2015/01/26/welcome-to-jekyll.html
+        /jekyll/update/2015/05/25/do-not-render-result.html
         /about/
         /
         /unicode.html
       ))
     else
       expect(urls).to eq(%w(
+        /jekyll/update/2015/01/26/welcome-to-jekyll.html
+        /jekyll/update/2015/05/25/do-not-render-result.html
         /about/
         /index.html
         /unicode.html
@@ -58,11 +65,13 @@ describe "integration" do
     end
   end
 
-  it "removes liquid tags" do
-    entries_data.each do |page|
-      expect(page['body']).to_not include('{%')
-      expect(page['body']).to_not include('{{')
-    end
+  it "does not render the pages corpus using Liquid" do
+    # The content of each page in the pages corpus should be Liquid-rendered,
+    # but rendering the pages.json corpus may cause pages that contain code
+    # examples of Liquid tags may produce invalid JSON.
+    page = page_data '/jekyll/update/2015/05/25/do-not-render-result.html'
+    expect(page['body']).to_not include('{% raw %}')
+    expect(page['body']).to include('{% author chrisc %}')
   end
 
   it "removes HTML tags" do
