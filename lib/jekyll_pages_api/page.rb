@@ -52,14 +52,13 @@ module JekyllPagesApi
       (self.page.data['tags'] if self.page.respond_to?(:data)) || []
     end
 
-    def should_index?
-      result = self.page.data['should_index'] if self.page.respond_to?(:data)
-      result.nil? || result
+    def skip_index?
+      (self.page.data['skip_index'] if self.page.respond_to?(:data)) || false
     end
 
     def to_json
       optional = {}
-      optional['should_index'] = false unless self.should_index?
+      optional['skip_index'] = true if self.skip_index?
       optional.merge({
         title: self.title,
         url: self.url,

@@ -100,18 +100,18 @@ describe JekyllPagesApi::Page do
     end
   end
 
-  describe "#should_index?" do
-    it "defaults to true if the 'data' member isn't present" do
-      expect(create_static_file(BASEURL, '/foo/').should_index?).to eq(true)
+  describe "#skip_index?" do
+    it "defaults to false if the 'data' member isn't present" do
+      expect(create_static_file(BASEURL, '/foo/').skip_index?).to eq(false)
     end
 
-    it "defaults to true if the 'should_index' field isn't present" do
-      expect(create_page(BASEURL, '/foo/').should_index?).to eq(true)
+    it "defaults to false if the 'skip_index' field isn't present" do
+      expect(create_page(BASEURL, '/foo/').skip_index?).to eq(false)
     end
 
-    it "returns false if data['should_index'] is false" do
-      page = create_page(BASEURL, '/foo/', data:{'should_index' => false})
-      expect(page.should_index?).to eq(false)
+    it "returns true if data['skip_index'] is true" do
+      page = create_page(BASEURL, '/foo/', data:{'skip_index' => true})
+      expect(page.skip_index?).to eq(true)
     end
   end
 end
