@@ -95,4 +95,11 @@ describe "integration" do
     page = page_data('/about/')
     expect(page['tags']).to eq(["Jekyll", "test page", "convenient"])
   end
+
+  it "sets should_index only if it is false" do
+    page = page_data('/about/')
+    expect(page['should_index']).to eq(false)
+    page = page_data('/index.html')
+    expect(page['should_index']).to eq(nil)
+  end
 end

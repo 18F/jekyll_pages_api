@@ -99,4 +99,19 @@ describe JekyllPagesApi::Page do
       expect(page.body_text).to eq("foo bar baz")
     end
   end
+
+  describe "#should_index?" do
+    it "defaults to true if the 'data' member isn't present" do
+      expect(create_static_file(BASEURL, '/foo/').should_index?).to eq(true)
+    end
+
+    it "defaults to true if the 'should_index' field isn't present" do
+      expect(create_page(BASEURL, '/foo/').should_index?).to eq(true)
+    end
+
+    it "returns false if data['should_index'] is false" do
+      page = create_page(BASEURL, '/foo/', data:{'should_index' => false})
+      expect(page.should_index?).to eq(false)
+    end
+  end
 end
