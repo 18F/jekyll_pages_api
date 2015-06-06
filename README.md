@@ -40,6 +40,10 @@ You can then see the generated JSON file at http://localhost:4000/api/v1/pages.j
 
 This endpoint will be re-generated any time your site is rebuilt.
 
+### Skipping the index
+
+The [Jekyll Pages API Search plugin](https://github.com/18F/jekyll_pages_api_search) uses this plugin to build a search index. Add `skip_index: true` to the front matter of any documents you wish to exclude from this index.
+
 ## Developing
 
 * Run `bundle` to install any necessary gems.

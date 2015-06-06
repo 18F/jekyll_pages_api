@@ -99,4 +99,19 @@ describe JekyllPagesApi::Page do
       expect(page.body_text).to eq("foo bar baz")
     end
   end
+
+  describe "#skip_index?" do
+    it "defaults to false if the 'data' member isn't present" do
+      expect(create_static_file(BASEURL, '/foo/').skip_index?).to eq(false)
+    end
+
+    it "defaults to false if the 'skip_index' field isn't present" do
+      expect(create_page(BASEURL, '/foo/').skip_index?).to eq(false)
+    end
+
+    it "returns true if data['skip_index'] is true" do
+      page = create_page(BASEURL, '/foo/', data:{'skip_index' => true})
+      expect(page.skip_index?).to eq(true)
+    end
+  end
 end

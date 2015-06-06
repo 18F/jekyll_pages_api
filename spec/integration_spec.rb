@@ -95,4 +95,11 @@ describe "integration" do
     page = page_data('/about/')
     expect(page['tags']).to eq(["Jekyll", "test page", "convenient"])
   end
+
+  it "sets skip_index only if it is true" do
+    page = page_data('/about/')
+    expect(page['skip_index']).to eq(true)
+    page = page_data('/unicode.html')
+    expect(page['skip_index']).to eq(nil)
+  end
 end
