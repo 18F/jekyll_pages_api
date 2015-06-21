@@ -97,9 +97,10 @@ module JekyllPagesApi
           attr_begin_i = current.index attr_begin
           unless attr_begin_i.nil?
             attr_begin_i += attr_begin.size + 1
-            delim = s[attr_begin_i-1]
-            attr_end_i = s.index delim, attr_begin_i
+            delim = current[attr_begin_i-1]
+            attr_end_i = current.index delim, attr_begin_i
             next if attr_end_i.nil?
+            attr_end_i -= 1
             attrs[attr] = current[attr_begin_i..attr_end_i]
           end
         end
