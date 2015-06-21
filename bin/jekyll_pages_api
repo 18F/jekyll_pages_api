@@ -127,19 +127,21 @@ module JekyllPagesApi
 
       start_body = bracket_i + 1
       search_i = start_body
+      open_tag_i = body.index open_tag, search_i
+      end_tag_i = body.index end_tag, search_i
       depth = 1
       until depth == 0
-        open_tag_i = body.index open_tag, search_i
-        end_tag_i = body.index end_tag, search_i
         if end_tag_i.nil?
           raise "End tag missing: #{end_tag}"
         end
         if !open_tag.nil? && open_tag_i < end_tag_i
           depth += 1
           search_i = open_tag_i + open_tag.size
+          open_tag_i = body.index open_tag, search_i
         else
           depth -= 1
           search_i = end_tag_i + end_tag.size
+          end_tag_i = body.index end_tag, search_i unless depth == 0
         end
       end
       @content = body[start_body..end_tag_i]
