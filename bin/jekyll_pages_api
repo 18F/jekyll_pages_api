@@ -1,0 +1,158 @@
+#! /usr/bin/env ruby
+# Author: Mike Bland <michael.bland@gsa.gov>
+# Date:   2015-06-21
+
+require_relative '../lib/jekyll_pages_api'
+
+module JekyllPagesApi
+  class GeneratedSite
+    attr_reader :baseurl, :basedir, :title_prefix, :body_element
+    attr_accessor :pages
+
+    def initialize(baseurl, basedir, title_prefix, body_element)
+      @baseurl = baseurl
+      @basedir = basedir
+      @title_prefix = title_prefix
+      @body_element = body_element
+      @pages = Array.new
+    end
+
+    def each_site_file
+      Dir[File.join self.basedir, '**', '*'].each do |f|
+        next unless f.end_with? '.html'
+        begin
+          page = GeneratedPage.new(self.basedir, f)
+          page.parse self.title_prefix, self.body_element
+          yield page unless page.data['title'].nil?
+        rescue
+          $stderr.puts "Error processing #{f}"
+          raise
+        end
+      end
+    end
+  end
+
+  class GeneratedPage
+    attr_reader :path, :relative_path, :data, :content
+
+    def initialize(basedir, path)
+      @path = path
+      basedir_len = basedir.size
+      basedir_len += 1 if basedir.end_with? File::SEPARATOR
+
+      end_path = path.size
+      index_suffix = File.join "", "index.html"
+      end_path -= (index_suffix.size + 1) if path.end_with? index_suffix
+      @relative_path = path[basedir_len..end_path]
+      @data = Hash.new
+      @content = nil
+    end
+
+    def parse(title_prefix, body_element)
+      @content = File.read(self.path)
+      head_section = parse_basic_tag 'head', content
+      return if head_section.nil?
+
+      title = parse_title_from_head head_section
+      if !title.nil? && title.start_with?(title_prefix)
+        title = title[title_prefix.size..title.size]
+      end
+      self.data['title'] = title
+      parse_meta_tags head_section
+      parse_body body_element
+    end
+
+    private
+
+    def parse_basic_tag(tag_name, s)
+      open_tag = "<#{tag_name}"
+      close_tag = "</#{tag_name}>"
+      open_i = s.index open_tag
+      return nil if open_i.nil?
+      open_i = s.index '>', open_i + open_tag.size
+      close_i = s.index(close_tag, open_i)
+      return nil if close_i.nil?
+      close_i -= 1
+      return s[open_i..close_i]
+    end
+
+    def parse_title_from_head(head_section)
+      return parse_basic_tag 'title', head_section unless head_section.nil?
+    end
+
+    def parse_meta_tags(s)
+      open_tag = "<meta "
+      open_i = s.index open_tag
+
+      until open_i.nil? do
+        open_i += open_tag.size
+        close_i = s.index '>', open_i
+        return if close_i.nil?
+
+        current = s[open_i..close_i]
+        attrs = {'name' => nil, 'content' => nil}
+
+        attrs.keys.each do |attr|
+          attr_begin = "#{attr}="
+          attr_begin_i = current.index attr_begin
+          unless attr_begin_i.nil?
+            attr_begin_i += attr_begin.size + 1
+            delim = s[attr_begin_i-1]
+            attr_end_i = s.index delim, attr_begin_i
+            next if attr_end_i.nil?
+            attrs[attr] = current[attr_begin_i..attr_end_i]
+          end
+        end
+        meta_name = attrs['name']
+        self.data[meta_name] = attrs['content'] unless meta_name.nil?
+        close_i += 1
+        open_i = s.index open_tag, close_i
+      end
+    end
+
+    def parse_body(body_element)
+      @content = parse_basic_tag 'body', @content
+      start_body = @content.index body_element
+      return if start_body.nil?
+      body = @content
+
+      start_body += 1
+      end_name_i = body.index ' ', start_body
+      bracket_i = body.index '>', start_body
+      end_name_i = bracket_i if bracket_i < end_name_i
+      tag_name = body[start_body..end_name_i-1]
+      open_tag = "<#{tag_name}"
+      end_tag = "</#{tag_name}>"
+
+      start_body = bracket_i + 1
+      search_i = start_body
+      depth = 1
+      until depth == 0
+        open_tag_i = body.index open_tag, search_i
+        end_tag_i = body.index end_tag, search_i
+        if end_tag_i.nil?
+          raise "End tag missing: #{end_tag}"
+        end
+        if !open_tag.nil? && open_tag_i < end_tag_i
+          depth += 1
+          search_i = open_tag_i + open_tag.size
+        else
+          depth -= 1
+          search_i = end_tag_i + end_tag.size
+        end
+      end
+      @content = body[start_body..end_tag_i]
+    end
+  end
+end
+
+if ARGV.length != 4
+  $stderr.puts "Usage: #{$0} baseurl basedir title_prefix body_element"
+  exit 1
+end
+
+baseurl, basedir, title_prefix, body_element = ARGV
+generator = ::JekyllPagesApi::Generator.new(
+  ::JekyllPagesApi::GeneratedSite.new(
+    baseurl, basedir, title_prefix, body_element))
+puts generator.page.output
