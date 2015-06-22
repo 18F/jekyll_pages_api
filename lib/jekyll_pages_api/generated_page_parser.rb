@@ -13,14 +13,14 @@ module JekyllPagesApi
     def self.parse_generated_page(content, title_prefix, body_element_tag)
       data = {}
       head_element = self.parse_basic_tag 'head', content
-      return data, nil if head_element.nil?
+      return data, "" if head_element.nil?
 
       title = self.parse_basic_tag 'title', head_element
       if !title.nil? && title.start_with?(title_prefix)
         title = title[title_prefix.size..title.size]
       end
       data['title'] = title
-      data.merge(self.parse_meta_tags head_element)
+      data.merge!(self.parse_meta_tags head_element)
       return data, self.parse_content_from_body(content, body_element_tag)
     end
 
@@ -51,15 +51,16 @@ module JekyllPagesApi
       meta_tags = {}
 
       until open_i.nil? do
-        open_i += open_tag.size
+        # -1 to remove the space at the end.
+        open_i += open_tag.size - 1
         close_i = head_element.index '>', open_i
-        return if close_i.nil?
+        return meta_tags if close_i.nil?
 
         current = head_element[open_i..close_i]
         attrs = {'name' => nil, 'content' => nil}
 
         attrs.keys.each do |attr|
-          attr_begin = "#{attr}="
+          attr_begin = " #{attr}="
           attr_begin_i = current.index attr_begin
           unless attr_begin_i.nil?
             attr_begin_i += attr_begin.size + 1
@@ -83,7 +84,8 @@ module JekyllPagesApi
     # @param body_element_tag see {GeneratedSite#initialize}
     def self.parse_content_from_body(content, body_element_tag)
       body = parse_basic_tag 'body', content
-      start_body = body.index body_element_tag
+      return content if body.nil?
+      start_body = body.index body_element_tag unless body_element_tag.empty?
       return body if start_body.nil?
 
       start_body += 1
@@ -103,7 +105,7 @@ module JekyllPagesApi
         if end_tag_i.nil?
           raise "End tag missing: #{end_tag}"
         end
-        if !open_tag.nil? && open_tag_i < end_tag_i
+        if !open_tag_i.nil? && open_tag_i < end_tag_i
           depth += 1
           search_i = open_tag_i + open_tag.size
           open_tag_i = body.index open_tag, search_i
