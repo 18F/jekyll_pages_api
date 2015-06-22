@@ -14,11 +14,11 @@ module JekyllPagesApi
       @basedir = basedir
       @title_prefix = title_prefix
       @body_element = body_element
-      @pages = Array.new
+      @pages = []
     end
 
     def each_site_file
-      Dir[File.join self.basedir, '**', '*'].each do |f|
+      Dir.glob(File.join(self.basedir, '**', '*')) do |f|
         next unless f.end_with? '.html'
         begin
           page = GeneratedPage.new(self.basedir, f)
@@ -50,45 +50,45 @@ module JekyllPagesApi
 
     def parse(title_prefix, body_element)
       @content = File.read(self.path)
-      head_section = parse_basic_tag 'head', content
-      return if head_section.nil?
+      head_element = parse_basic_tag 'head', content
+      return if head_element.nil?
 
-      title = parse_title_from_head head_section
+      title = parse_title_from_head head_element
       if !title.nil? && title.start_with?(title_prefix)
         title = title[title_prefix.size..title.size]
       end
       self.data['title'] = title
-      parse_meta_tags head_section
+      parse_meta_tags head_element
       parse_body body_element
     end
 
     private
 
-    def parse_basic_tag(tag_name, s)
+    def parse_basic_tag(tag_name, content)
       open_tag = "<#{tag_name}"
       close_tag = "</#{tag_name}>"
-      open_i = s.index open_tag
+      open_i = content.index open_tag
       return nil if open_i.nil?
-      open_i = s.index('>', open_i + open_tag.size) + 1
-      close_i = s.index close_tag, open_i
+      open_i = content.index('>', open_i + open_tag.size) + 1
+      close_i = content.index close_tag, open_i
       return nil if close_i.nil?
-      return s[open_i..close_i-1]
+      return content[open_i..close_i-1]
     end
 
-    def parse_title_from_head(head_section)
-      return parse_basic_tag 'title', head_section unless head_section.nil?
+    def parse_title_from_head(head_element)
+      return parse_basic_tag 'title', head_element unless head_element.nil?
     end
 
-    def parse_meta_tags(s)
+    def parse_meta_tags(head_element)
       open_tag = "<meta "
-      open_i = s.index open_tag
+      open_i = head_element.index open_tag
 
       until open_i.nil? do
         open_i += open_tag.size
-        close_i = s.index '>', open_i
+        close_i = head_element.index '>', open_i
         return if close_i.nil?
 
-        current = s[open_i..close_i]
+        current = head_element[open_i..close_i]
         attrs = {'name' => nil, 'content' => nil}
 
         attrs.keys.each do |attr|
@@ -106,7 +106,7 @@ module JekyllPagesApi
         meta_name = attrs['name']
         self.data[meta_name] = attrs['content'] unless meta_name.nil?
         close_i += 1
-        open_i = s.index open_tag, close_i
+        open_i = head_element.index open_tag, close_i
       end
     end
 
