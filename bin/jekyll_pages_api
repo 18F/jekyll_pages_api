@@ -21,9 +21,10 @@ Arguments:
   title_prefix
     Prefix to strip from page titles
   body_element_tag
-    Tag (or tag prefix) identifying the main content element of each tag. Can
-    be a complete tag (ending in '>'), or the prefix of a longer tag. Used to
-    strip boilerplate out of the content exported via the API.
+    Tag (or tag prefix) identifying the main content element within the <body>
+    element of each document. Can be a complete tag (ending in '>'), or the
+    prefix of a longer tag. Used to strip boilerplate out of the content
+    exported via the API.
 END_USAGE
 
 if ARGV.length == 1 && ARGV[0] == '-h'
