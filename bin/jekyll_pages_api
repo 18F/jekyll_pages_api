@@ -4,157 +4,45 @@
 
 require_relative '../lib/jekyll_pages_api'
 
-module JekyllPagesApi
-  class GeneratedSite
-    attr_reader :baseurl, :basedir, :title_prefix, :body_element
-    attr_accessor :pages
+USAGE=<<END_USAGE
+#{$0}: generate Jekyll Pages API output from a pregenerated site
 
-    def initialize(baseurl, basedir, title_prefix, body_element)
-      @baseurl = baseurl
-      @basedir = basedir
-      @title_prefix = title_prefix
-      @body_element = body_element
-      @pages = []
-    end
+Usage:
+  #{$0} baseurl basedir title_prefix body_element_tag > pages.json
+  #{$0} -h
 
-    def each_site_file
-      Dir.glob(File.join(self.basedir, '**', '*')) do |f|
-        next unless f.end_with? '.html'
-        begin
-          page = GeneratedPage.new(self.basedir, f)
-          page.parse self.title_prefix, self.body_element
-          yield page unless page.data['title'].nil?
-        rescue
-          $stderr.puts "Error processing #{f}"
-          raise
-        end
-      end
-    end
-  end
+Arguments:
+  -h
+    Print this help message
+  baseurl
+    URL prefix of every page of the generated site
+  basedir
+    Path to the generated site's root directory
+  title_prefix
+    Prefix to strip from page titles
+  body_element_tag
+    Tag (or tag prefix) identifying the main content element of each tag. Can
+    be a complete tag (ending in '>'), or the prefix of a longer tag. Used to
+    strip boilerplate out of the content exported via the API.
+END_USAGE
 
-  class GeneratedPage
-    attr_reader :path, :relative_path, :data, :content
-
-    def initialize(basedir, path)
-      @path = path
-      basedir_len = basedir.size
-      basedir_len += 1 if basedir.end_with? File::SEPARATOR
-
-      end_path = path.size
-      index_suffix = File.join "", "index.html"
-      end_path -= (index_suffix.size + 1) if path.end_with? index_suffix
-      @relative_path = path[basedir_len..end_path]
-      @data = Hash.new
-      @content = nil
-    end
-
-    def parse(title_prefix, body_element)
-      @content = File.read(self.path)
-      head_element = parse_basic_tag 'head', content
-      return if head_element.nil?
-
-      title = parse_title_from_head head_element
-      if !title.nil? && title.start_with?(title_prefix)
-        title = title[title_prefix.size..title.size]
-      end
-      self.data['title'] = title
-      parse_meta_tags head_element
-      parse_body body_element
-    end
-
-    private
-
-    def parse_basic_tag(tag_name, content)
-      open_tag = "<#{tag_name}"
-      close_tag = "</#{tag_name}>"
-      open_i = content.index open_tag
-      return nil if open_i.nil?
-      open_i = content.index('>', open_i + open_tag.size) + 1
-      close_i = content.index close_tag, open_i
-      return nil if close_i.nil?
-      return content[open_i..close_i-1]
-    end
-
-    def parse_title_from_head(head_element)
-      return parse_basic_tag 'title', head_element unless head_element.nil?
-    end
-
-    def parse_meta_tags(head_element)
-      open_tag = "<meta "
-      open_i = head_element.index open_tag
-
-      until open_i.nil? do
-        open_i += open_tag.size
-        close_i = head_element.index '>', open_i
-        return if close_i.nil?
-
-        current = head_element[open_i..close_i]
-        attrs = {'name' => nil, 'content' => nil}
-
-        attrs.keys.each do |attr|
-          attr_begin = "#{attr}="
-          attr_begin_i = current.index attr_begin
-          unless attr_begin_i.nil?
-            attr_begin_i += attr_begin.size + 1
-            delim = current[attr_begin_i-1]
-            attr_end_i = current.index delim, attr_begin_i
-            next if attr_end_i.nil?
-            attr_end_i -= 1
-            attrs[attr] = current[attr_begin_i..attr_end_i]
-          end
-        end
-        meta_name = attrs['name']
-        self.data[meta_name] = attrs['content'] unless meta_name.nil?
-        close_i += 1
-        open_i = head_element.index open_tag, close_i
-      end
-    end
-
-    def parse_body(body_element)
-      @content = parse_basic_tag 'body', @content
-      start_body = @content.index body_element
-      return if start_body.nil?
-      body = @content
-
-      start_body += 1
-      end_name_i = body.index ' ', start_body
-      bracket_i = body.index '>', start_body
-      end_name_i = bracket_i if bracket_i < end_name_i
-      tag_name = body[start_body..end_name_i-1]
-      open_tag = "<#{tag_name}"
-      end_tag = "</#{tag_name}>"
-
-      start_body = bracket_i + 1
-      search_i = start_body
-      open_tag_i = body.index open_tag, search_i
-      end_tag_i = body.index end_tag, search_i
-      depth = 1
-      until depth == 0
-        if end_tag_i.nil?
-          raise "End tag missing: #{end_tag}"
-        end
-        if !open_tag.nil? && open_tag_i < end_tag_i
-          depth += 1
-          search_i = open_tag_i + open_tag.size
-          open_tag_i = body.index open_tag, search_i
-        else
-          depth -= 1
-          search_i = end_tag_i + end_tag.size
-          end_tag_i = body.index end_tag, search_i unless depth == 0
-        end
-      end
-      @content = body[start_body..end_tag_i-1]
-    end
-  end
+if ARGV.length == 1 && ARGV[0] == '-h'
+  puts USAGE
+  exit
 end
 
 if ARGV.length != 4
-  $stderr.puts "Usage: #{$0} baseurl basedir title_prefix body_element"
+  $stderr.puts USAGE
   exit 1
 end
 
-baseurl, basedir, title_prefix, body_element = ARGV
+baseurl, basedir, title_prefix, body_element_tag = ARGV
+unless Dir.exist?(basedir)
+  $stderr.puts "#{basedir} does not exist"
+  exit 1
+end
+
 generator = ::JekyllPagesApi::Generator.new(
   ::JekyllPagesApi::GeneratedSite.new(
-    baseurl, basedir, title_prefix, body_element))
+    baseurl, basedir, title_prefix, body_element_tag))
 puts generator.page.output
