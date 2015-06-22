@@ -44,6 +44,10 @@ This endpoint will be re-generated any time your site is rebuilt.
 
 The [Jekyll Pages API Search plugin](https://github.com/18F/jekyll_pages_api_search) uses this plugin to build a search index. Add `skip_index: true` to the front matter of any documents you wish to exclude from this index.
 
+### Running standalone
+
+If you wish to generate a `pages.json` file when using a site generation tool other than Jekyll, you can run the `jekyll_pages_api` executable as a post-generation step. Run `jekyll_pages_api -h` for instructions.
+
 ## Developing
 
 * Run `bundle` to install any necessary gems.
