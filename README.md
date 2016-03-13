@@ -14,6 +14,12 @@ group :jekyll_plugins do
 end
 ```
 
+If you're creating a new Gemfile in your Jekyll project, make sure to include a source at the top:
+
+```ruby
+source 'https://rubygems.org'
+```
+
 And then execute:
 
 ```bash
