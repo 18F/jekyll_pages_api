@@ -2,6 +2,7 @@ language: ruby
 rvm:
 - 2.0.0
 gemfile:
-- gemfiles/jekyll_2.gemfile
-- gemfiles/jekyll_3.gemfile
+- gemfiles/jekyll_2.0.gemfile
+- gemfiles/jekyll_3.0.gemfile
+- gemfiles/jekyll_3.1.gemfile
 script: bundle exec rspec

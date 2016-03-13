@@ -48,11 +48,11 @@ describe "integration" do
     # not sure why this discrepancy exists...
     if Jekyll::VERSION.start_with?('3.')
       expect(urls).to eq(%w(
-        /jekyll/update/2015/01/26/welcome-to-jekyll.html
-        /jekyll/update/2015/05/25/do-not-render-result.html
         /about/
         /
         /unicode.html
+        /jekyll/update/2015/01/26/welcome-to-jekyll.html
+        /jekyll/update/2015/05/25/do-not-render-result.html
       ))
     else
       expect(urls).to eq(%w(
