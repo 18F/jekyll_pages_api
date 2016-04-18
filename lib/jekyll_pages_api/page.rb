@@ -53,7 +53,7 @@ module JekyllPagesApi
     end
 
     def meta
-      (self.page.data['meta'] if self.page.respond_to?(:data)) || []
+      (self.page.data['meta'] if self.page.respond_to?(:data)) || {}
     end
 
     def skip_index?
