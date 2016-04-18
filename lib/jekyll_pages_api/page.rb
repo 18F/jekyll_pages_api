@@ -52,6 +52,10 @@ module JekyllPagesApi
       (self.page.data['tags'] if self.page.respond_to?(:data)) || []
     end
 
+    def meta
+      (self.page.data['meta'] if self.page.respond_to?(:data)) || []
+    end
+
     def skip_index?
       (self.page.data['skip_index'] if self.page.respond_to?(:data)) || false
     end
@@ -63,6 +67,7 @@ module JekyllPagesApi
         title: self.title,
         url: self.url,
         tags: self.tags,
+        meta: self.meta,
         body: self.body_text
       })
     end
