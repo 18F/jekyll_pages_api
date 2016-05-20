@@ -34,8 +34,7 @@ RSpec.shared_context "create page" do
 
   def create_post(baseurl, page_url, data: nil, title: nil)
     site = instance_double(Jekyll::Site, baseurl: baseurl)
-    jekyll_post = instance_double(Jekyll::Post, site: site, url: page_url,
-      path: page_url)
+    jekyll_post = double(:post)
     allow(jekyll_post).to receive(:data).and_return(data) unless data.nil?
     allow(jekyll_post).to receive(:title).and_return(title) unless title.nil?
     JekyllPagesApi::Page.new(jekyll_post, site)

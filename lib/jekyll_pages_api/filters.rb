@@ -22,7 +22,9 @@ module JekyllPagesApi
       [
         :strip_html,
         :condense,
-        :decode_html
+        :decode_html,
+        :strip_html,
+        :condense
       ].reduce(str) do |result, filter|
         self.send(filter, result)
       end
