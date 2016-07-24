@@ -56,9 +56,17 @@ If you wish to generate a `pages.json` file when using a site generation tool ot
 
 ## Developing
 
+> __Important Note:__ This gem uses the [Appraisal
+  Gem](https://github.com/thoughtbot/appraisal) to ensure that it's tests pass against
+  all supported versions of Jekyll. It uses the `appraisal` command - you can
+  read more [in the
+  documentation](https://github.com/thoughtbot/appraisal#usage).
+
 * Run `bundle` to install any necessary gems.
 * Run `bundle exec rake -T` to get a list of build commands and descriptions.
 * Run `bundle exec rake spec` to run the tests.
+* Run `appraisal install` to install the correct Jekyll dependencies.
+* Run `appraisal rake spec` to run all of the appraisals.
 * Run `bundle exec rake build` to ensure the entire gem can build.
 * Commit an update to bump the version number of
   `lib/jekyll_pages_api/version.rb` before running `bundle exec rake release`.
