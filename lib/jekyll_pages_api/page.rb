@@ -59,11 +59,13 @@ module JekyllPagesApi
     def to_json
       optional = {}
       optional['skip_index'] = true if self.skip_index?
+
       optional.merge({
         title: self.title,
         url: self.url,
         tags: self.tags,
-        body: self.body_text
+        body: self.body_text,
+        meta: self.page.data
       })
     end
   end
