@@ -97,6 +97,8 @@ describe "integration" do
     expect(page['meta']['layout']).to eq("page")
     expect(page['meta']['permalink']).to eq("/about/")
     expect(page['meta']['skip_index']).to eq(true)
+    expect(page['meta']['tags']).to eq(["Jekyll", "test page", "convenient"])
+    expect(page['meta']['title']).to eq("About")
   end
 
   it "sets skip_index only if it is true" do
