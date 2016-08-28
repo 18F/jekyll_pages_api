@@ -39,7 +39,8 @@ module JekyllPagesApi
         paths = ['baz.txt', 'quux.html', 'xyzzy.html'].sort.map do |f|
           File.join content_dir, f
         end
-        expect(Dir.glob(File.join(content_dir, '**', '*'))).to eq(paths)
+        expect(Dir.glob(File.join(content_dir, '**', '*'))).to contain_exactly(
+          *paths)
 
         site = GeneratedSite.new("https://unused/", basedir,
           "18F &mdash; ", "<div class='content'")
