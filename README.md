@@ -37,7 +37,14 @@ You can then see the generated JSON file at http://localhost:4000/api/v1/pages.j
       // the page path
       "url": "/",
       // the content of the page, with the HTML tags stripped and the whitespace condensed
-      "body": "18F is a digital services team within GSA..."
+      "body": "18F is a digital services team within GSA...",
+      "meta": {
+        // all the frontmatter for the page
+        "title": "18F Hub",
+        "url": "/",
+        "layout": "page",
+        "permalink": "/",
+      }
     },
     // ...
   ]
